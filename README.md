@@ -15,13 +15,6 @@ A simple Java chat application with a server and client using Java Swing for the
    ```sh
    git clone https://github.com/SohamDhotre/JavaChat.git
 
-   
-To create a GitHub README for your Java chat application, you can follow the template below. This template includes a brief description of your project, installation instructions, and usage instructions. You should also include any relevant badges or links to your repository.
-
-markdown
-Copy code
-# Chat Application
-
 ![Java](https://img.shields.io/badge/Java-1.8-blue)
 ![Swing](https://img.shields.io/badge/Swing-UI-orange)
 
