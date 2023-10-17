@@ -1,2 +1,60 @@
 # JavaChat
-chatting application using server socket programming using JAVA
+A simple Java chat application with a server and client using Java Swing for the user interface.
+
+![Java](https://img.shields.io/badge/Java-1.8-blue)
+![Swing](https://img.shields.io/badge/Swing-UI-orange)
+
+## Features
+
+- Real-time messaging between a server and multiple clients.
+- A user-friendly graphical interface for ease of use.
+
+- ## Installation
+
+1. Clone the repository to your local machine:
+   ```sh
+   git clone https://github.com/SohamDhotre/JavaChat.git
+
+   
+To create a GitHub README for your Java chat application, you can follow the template below. This template includes a brief description of your project, installation instructions, and usage instructions. You should also include any relevant badges or links to your repository.
+
+markdown
+Copy code
+# Chat Application
+
+![Java](https://img.shields.io/badge/Java-1.8-blue)
+![Swing](https://img.shields.io/badge/Swing-UI-orange)
+
+A simple Java chat application with a server and client using Java Swing for the user interface.
+
+## Features
+
+- Real-time messaging between a server and multiple clients.
+- A user-friendly graphical interface for ease of use.
+
+## Screenshots
+
+![Server](server-screenshot.png)
+![Client](client-screenshot.png)
+
+## Installation
+
+1. Clone the repository to your local machine:
+   ```sh
+   git clone https://github.com/yourusername/chat-application.git
+Open the project in your favorite Java IDE (e.g., IntelliJ IDEA, Eclipse).
+
+Compile and run the Server class for the server side first and then the Client class for the client side.
+
+Usage
+Start the server by running the Server class. The server will listen for incoming connections on port 7777.
+
+Start one or more clients by running the Client class. Provide the server's IP address and port number (default is 7777) 
+ex:socket=new Socket("IP_Address(or localhost)", portNo integer ); replace this line of code in the client side .
+
+Begin chatting between the server and client(s). Type messages and press Enter to send them.
+
+To exit, type "exit" and press Enter. This will close the connection.
+
+Author 
+Soham Dhotre
