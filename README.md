@@ -27,9 +27,8 @@ A simple Java chat application with a server and client using Java Swing for the
 
 ## Screenshots
 
-![Server](https://github.com/SohamDhotre/JavaChat/blob/main/Server_screenshot.png)
-![Client](https://github.com/SohamDhotre/JavaChat/blob/main/Client_screenshot.png)
-
+![Server][(server-screenshot.png)](https://github.com/SohamDhotre/JavaChat/blob/main/Server_screenshot.png)
+![Client][(client-screenshot.png)](https://github.com/SohamDhotre/JavaChat/blob/main/Client_screenshot.png)
 ## Installation
 
 1. Clone the repository to your local machine:
