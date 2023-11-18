@@ -22,7 +22,7 @@ A simple Java chat application with a server and client using Java Swing for the
 
 ## Features
 
-- Real-time messaging between a server and multiple clients.
+- Real-time messaging between a server and client.
 - A user-friendly graphical interface for ease of use.
 
 ## Screenshots
@@ -48,6 +48,3 @@ ex:socket=new Socket("IP_Address(or localhost)", portNo integer ); replace this 
 Begin chatting between the server and client(s). Type messages and press Enter to send them.
 
 To exit, type "exit" and press Enter. This will close the connection.
-
-Author 
-Soham Dhotre
