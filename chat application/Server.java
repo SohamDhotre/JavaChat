@@ -49,7 +49,7 @@ class Server extends JFrame
 
             startReading();
 
-            // startWriting();
+            startWriting();
         }
          catch (Exception e) {
             // TODO: handle exception
@@ -59,18 +59,6 @@ class Server extends JFrame
     }
     private void headleEvents()  {
         messageInput.addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
 
             @Override
             public void keyReleased(KeyEvent e) {
@@ -128,35 +116,6 @@ class Server extends JFrame
 
         this.setVisible(true);
     }
-    private void startWriting() {
-        //one thread is for writing data
-        Runnable r2=()->{
-            System.out.println("writer started");
-            try {
-                while(!socket.isClosed())
-                {
-                    
-                    BufferedReader br1=new BufferedReader(new InputStreamReader(System.in));
-                    String content=br1.readLine();
-                    pw.println(content);
-                    pw.flush();
-                    if(content.equals("exit"))
-                    {
-                        socket.close();
-                        break;
-                    }
-                    
-                }
-            } 
-            catch (Exception e) 
-            {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-        };
-        new Thread(r2).start();
-    }
-
 
     private void startReading() {
         //one thread is for reading data
@@ -189,9 +148,38 @@ class Server extends JFrame
         new Thread(r1).start();
     }
 
+    private void startWriting() {
+        //one thread is for writing data
+        Runnable r2=()->{
+            System.out.println("writer started");
+            try {
+                while(!socket.isClosed())
+                {
+                    
+                    BufferedReader br1=new BufferedReader(new InputStreamReader(System.in));
+                    String content=br1.readLine();
+                    if(content.equals("exit"))
+                    {
+                        socket.close();
+                        break;
+                    }
+                    pw.println(content);
+                    pw.flush();
+                }
+            } 
+            catch (Exception e) 
+            {
+                // TODO: handle exception
+                e.printStackTrace();
+            }
+        };
+        new Thread(r2).start();
+    }
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         System.out.println("this is server ... going to start");
         new Server();
     }
+    
 }
