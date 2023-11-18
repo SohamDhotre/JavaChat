@@ -6,7 +6,7 @@ A simple Java chat application with a server and client using Java Swing for the
 
 ## Features
 
-- Real-time messaging between a server and multiple clients.
+- Real-time messaging between a server and clients.
 - A user-friendly graphical interface for ease of use.
 
 - ## Installation
