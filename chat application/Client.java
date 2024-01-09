@@ -1,9 +1,6 @@
 import java.io.*;
 import java.net.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -34,71 +31,22 @@ public class Client extends JFrame {
     {
         try {
             // System.out.println("sending request to server");
-            socket=new Socket("119.226.236.129", 7777 );
-            // System.out.println("connection done");
+            socket=new Socket("192.168.137.1", 7777 );
+            System.out.println("connection done");
 
             br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             pw=new PrintWriter(socket.getOutputStream(), true);
 
             createGui();
-            handleEvents();
             startReading();
-            // startWriting();
-
-
+            startWriting();
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
         }
     }
     
-
-    private void handleEvents() {
-        messageInput.addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyTyped(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                // TODO Auto-generated method stub
-                
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                if(e.getKeyCode()==10)
-                {
-                    String contentToSend=messageInput.getText();
-                    messageArea.append("Me : "+contentToSend +"\n");
-                    pw.println(contentToSend);
-                    pw.flush();
-                    messageInput.setText("");
-                    messageInput.requestFocus();
-                    if(contentToSend.equalsIgnoreCase("exit"))
-                    {
-                        try {
-                            socket.close();
-                            messageInput.setEnabled(false);
-                        } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        
-                    }
-                    
-                }
-            }
-            
-        });
-    }
-
-
     private void createGui() {
         this.setTitle("Client Messenger[END]");
         this.setSize(600, 600);
@@ -133,65 +81,51 @@ public class Client extends JFrame {
 
 
     private void startWriting() {
-        //one thread is for writing data
-        Runnable r2=()->{
-            System.out.println("writer started");
-            try {
-                while(!socket.isClosed())
-                {
-                    
-                    BufferedReader br1=new BufferedReader(new InputStreamReader(System.in));
-                    String content=br1.readLine();
-                    pw.println(content);
+        // Event handling to send messages via GUI
+        messageInput.addActionListener(e -> {
+            String contentToSend = messageInput.getText();
+            messageArea.append("Me : " + contentToSend + "\n");
+            pw.println(contentToSend);
+            pw.flush();
+            messageInput.setText("");
+            messageInput.requestFocus();
+            if (contentToSend.equalsIgnoreCase("exit")) {
+                try {
+                    socket.close();
+                    messageInput.setEnabled(false);
+                    pw.println("exit");
                     pw.flush();
-                    if(content.equals("exit"))
-                    {
-                        socket.close();
+                    JOptionPane.showMessageDialog(this, "You terminated the chat!!");
+                    System.exit(0);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void startReading() {
+        // Reader thread to read incoming messages
+        Runnable r1 = () -> {
+            try {
+                while (true) {
+                    String msg = br.readLine();
+                    if (msg.equalsIgnoreCase("exit")) {
+                        messageArea.setEnabled(false);
+                        JOptionPane.showMessageDialog(this, "Server terminated the chat!!");
+                        System.exit(0);
+                        messageInput.setEnabled(false);
                         break;
                     }
-                    
+                    messageArea.append("Server : " + msg + "\n");
                 }
-            } 
-            catch (Exception e) 
-            {
-                // TODO: handle exception
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         };
-        new Thread(r2).start();
-    }
-
-
-    private void startReading() {
-        //one thread is for reading data
-        Runnable r1=()->{
-            System.out.println("reader started");
-            try {
-                while(true)
-                {
-                    
-                    String msg=br.readLine();
-                    if(msg.equalsIgnoreCase("exit"))
-                    {
-                        // System.out.p rintln("Server terminated the chat");
-                        JOptionPane.showMessageDialog(this, "Server terminated the chat!!");
-                        messageInput.setEnabled(false); 
-                        socket.close();
-                        break;
-                    }
-                    // System.out.println("Server: "+ msg);
-                    messageArea.append("Server : "+msg+"\n");
-                }
-
-            } 
-            catch (Exception e) 
-            {
-                // TODO: handle exception
-                e.printStackTrace();
-             }
-        };
         new Thread(r1).start();
     }
+    
     public static void main(String[] args) {
         System.out.println("this is client ...");
         new Client();
