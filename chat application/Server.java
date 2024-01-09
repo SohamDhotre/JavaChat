@@ -83,29 +83,57 @@ class Server extends JFrame
     }
 
 
+    // private void startWriting() {
+    //     // Event handling to send messages via GUI
+    //     messageInput.addActionListener(e -> {
+    //         String contentToSend = messageInput.getText();
+    //         messageArea.append("Me : " + contentToSend + "\n");
+    //         pw.println(contentToSend);
+    //         pw.flush();
+    //         messageInput.setText("");
+    //         messageInput.requestFocus();
+    //         if (contentToSend.equalsIgnoreCase("exit")) {
+    //             try {
+    //                 socket.close();
+    //                 messageInput.setEnabled(false);
+    //                 pw.println("exit");
+    //                 pw.flush();
+    //                 JOptionPane.showMessageDialog(this, "You terminated the chat!!");
+    //                 System.exit(0);
+    //             } catch (IOException e1) {
+    //                 e1.printStackTrace();
+    //             }
+    //         }
+    //     });
+    // }
+
     private void startWriting() {
-        // Event handling to send messages via GUI
-        messageInput.addActionListener(e -> {
-            String contentToSend = messageInput.getText();
-            messageArea.append("Me : " + contentToSend + "\n");
-            pw.println(contentToSend);
-            pw.flush();
-            messageInput.setText("");
-            messageInput.requestFocus();
-            if (contentToSend.equalsIgnoreCase("exit")) {
-                try {
-                    socket.close();
-                    messageInput.setEnabled(false);
-                    pw.println("exit");
-                    pw.flush();
-                    JOptionPane.showMessageDialog(this, "You terminated the chat!!");
-                    System.exit(0);
-                } catch (IOException e1) {
-                    e1.printStackTrace();
+        Runnable wrt = () -> {
+            messageInput.addActionListener(e -> {
+                String contentToSend = messageInput.getText();
+                messageArea.append("Me : " + contentToSend + "\n");
+                pw.println(contentToSend);
+                pw.flush();
+                messageInput.setText("");
+                messageInput.requestFocus();
+                if (contentToSend.equalsIgnoreCase("exit")) {
+                    try {
+                        socket.close();
+                        messageInput.setEnabled(false);
+                        pw.println("exit");
+                        pw.flush();
+                        JOptionPane.showMessageDialog(this, "You terminated the chat!!");
+                        System.exit(0);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                 }
-            }
-        });
+            });
+        };
+    
+        new Thread(wrt).start();
     }
+    
 
     private void startReading() {
         // Reader thread to read incoming messages
