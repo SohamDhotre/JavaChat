@@ -8,12 +8,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.*;
 
 
@@ -45,10 +42,7 @@ class Server extends JFrame
             pw=new PrintWriter(socket.getOutputStream(), true);
 
             createGui();
-            headleEvents();
-
             startReading();
-
             startWriting();
         }
          catch (Exception e) {
@@ -57,36 +51,7 @@ class Server extends JFrame
         }
 
     }
-    private void headleEvents()  {
-        messageInput.addKeyListener(new KeyListener() {
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                // TODO Auto-generated method stub
-                if(e.getKeyCode()==10)
-                {
-                    String contentToSend=messageInput.getText();
-                    if(contentToSend.equalsIgnoreCase("exit"))
-                    {
-                        try {
-                            socket.close();
-                            messageInput.setEnabled(false);
-                        } catch (IOException e1) {
-                            // TODO Auto-generated catch block
-                            e1.printStackTrace();
-                        }
-                        
-                    }
-                    messageArea.append("Me : "+contentToSend+"\n");
-                    pw.println(contentToSend);
-                    pw.flush();
-                    messageInput.setText("");
-                    messageInput.requestFocus();
-                }
-            }
-            
-        });
-    }
+    
     private void createGui() {
         this.setTitle("[Server END]");
         this.setSize(600,600);
@@ -117,69 +82,56 @@ class Server extends JFrame
         this.setVisible(true);
     }
 
+
+    private void startWriting() {
+        // Event handling to send messages via GUI
+        messageInput.addActionListener(e -> {
+            String contentToSend = messageInput.getText();
+            messageArea.append("Me : " + contentToSend + "\n");
+            pw.println(contentToSend);
+            pw.flush();
+            messageInput.setText("");
+            messageInput.requestFocus();
+            if (contentToSend.equalsIgnoreCase("exit")) {
+                try {
+                    socket.close();
+                    messageInput.setEnabled(false);
+                    pw.println("exit");
+                    pw.flush();
+                    JOptionPane.showMessageDialog(this, "You terminated the chat!!");
+                    System.exit(0);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
     private void startReading() {
-        //one thread is for reading data
-        Runnable r1=()->{
-            // System.out.println("reader started");
+        // Reader thread to read incoming messages
+        Runnable r1 = () -> {
             try {
-                while(true)
-                {
-                    
-                    String msg=br.readLine();
-                    if(msg.equalsIgnoreCase("exit"))
-                    {
+                while (true) {
+                    String msg = br.readLine();
+                    if (msg.equalsIgnoreCase("exit")) {
                         messageArea.setEnabled(false);
-                        JOptionPane.showMessageDialog(this, "client terminated the chat!!", "termination", 0, null);
-                        socket.close();
+                        JOptionPane.showMessageDialog(this, "Client terminated the chat!!");
+                        System.exit(0);
+                        messageInput.setEnabled(false);
                         break;
                     }
-
-                    // System.out.println("Client: "+ msg);
-                    messageArea.append("Client : "+msg+"\n");
-                    
+                    messageArea.append("Client : " + msg + "\n");
                 }
-            } 
-            catch (Exception e) 
-            {
-                // TODO: handle exception
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         };
         new Thread(r1).start();
     }
 
-    private void startWriting() {
-        //one thread is for writing data
-        Runnable r2=()->{
-            System.out.println("writer started");
-            try {
-                while(!socket.isClosed())
-                {
-                    
-                    BufferedReader br1=new BufferedReader(new InputStreamReader(System.in));
-                    String content=br1.readLine();
-                    if(content.equals("exit"))
-                    {
-                        socket.close();
-                        break;
-                    }
-                    pw.println(content);
-                    pw.flush();
-                }
-            } 
-            catch (Exception e) 
-            {
-                // TODO: handle exception
-                e.printStackTrace();
-            }
-        };
-        new Thread(r2).start();
-    }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         System.out.println("this is server ... going to start");
         new Server();
     }
-    
 }
